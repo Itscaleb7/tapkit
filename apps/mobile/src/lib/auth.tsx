@@ -1,7 +1,7 @@
 import type { Session } from "@supabase/supabase-js";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
-import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AppError, toAppError } from "./errors";
 import { invoke } from "./api";
 import { purchasesLogIn, purchasesLogOut } from "./purchases";
@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [initialising, setInitialising] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
-  const [manualSignOut, setManualSignOut] = useState(false);
+  const manualSignOut = useRef(false);
 
   useEffect(() => {
     let mounted = true;
@@ -44,10 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === "SIGNED_OUT") {
         qc.clear();
         purchasesLogOut();
-        setManualSignOut((wasManual) => {
-          if (!wasManual) setSessionExpired(true);
-          return false;
-        });
+        if (!manualSignOut.current) setSessionExpired(true);
+        manualSignOut.current = false;
       }
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") setSessionExpired(false);
     });
@@ -77,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
-    setManualSignOut(true);
+    manualSignOut.current = true;
     await supabase.auth.signOut();
   }, []);
 
@@ -93,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const deleteAccount = useCallback(async () => {
     await invoke("account-delete", { confirm: "DELETE" });
-    setManualSignOut(true);
+    manualSignOut.current = true;
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
     qc.clear();
   }, [qc]);

@@ -4,13 +4,20 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.28.0",
   "scripts": {
-    "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
+    "typecheck": "pnpm -r --filter=!@tapkit/e2e typecheck",
+    "lint": "pnpm --filter @tapkit/core --filter @tapkit/mobile --filter @tapkit/web lint",
+    "test": "pnpm --filter @tapkit/core --filter @tapkit/mobile --filter @tapkit/web test && node scripts/sync-core-to-functions.mjs --check",
+    "test:functions": "deno test --config supabase/functions/ai/deno.json supabase/functions/_shared/",
+    "test:integration": "pnpm --filter @tapkit/integration-tests test",
+    "test:e2e": "pnpm --filter @tapkit/e2e test",
     "sync:functions": "node scripts/sync-core-to-functions.mjs",
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
-    "test:integration": "pnpm --filter @tapkit/integration-tests test"
+    "db:types": "supabase gen types typescript --local > packages/core/src/database.types.ts && node scripts/sync-core-to-functions.mjs",
+    "functions:serve": "supabase functions serve --env-file supabase/functions/.env",
+    "mobile": "pnpm --filter @tapkit/mobile start",
+    "web": "pnpm --filter @tapkit/web dev",
+    "build:web": "pnpm --filter @tapkit/web build"
   },
   "devDependencies": {
     "supabase": "2.121.0",

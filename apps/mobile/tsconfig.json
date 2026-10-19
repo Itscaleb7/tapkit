@@ -4,6 +4,7 @@
     "strict": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    "types": ["jest", "node"],
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["**/*.ts", "**/*.tsx", "expo-env.d.ts"]

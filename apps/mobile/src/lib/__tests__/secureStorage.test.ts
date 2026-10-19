@@ -5,7 +5,6 @@ jest.mock("expo-secure-store", () => ({
   setItemAsync: jest.fn(async (k: string, v: string) => void mockStore.set(k, v)),
   deleteItemAsync: jest.fn(async (k: string) => void mockStore.delete(k)),
 }));
-jest.mock("react-native", () => ({ Platform: { OS: "ios" } }));
 
 import { secureStorage } from "../secureStorage";
 

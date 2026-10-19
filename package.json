@@ -1,0 +1,19 @@
+{
+  "name": "tapkit",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.28.0",
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "sync:functions": "node scripts/sync-core-to-functions.mjs",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "test:integration": "pnpm --filter @tapkit/integration-tests test"
+  },
+  "devDependencies": {
+    "supabase": "2.121.0",
+    "typescript": "~5.9.3"
+  }
+}

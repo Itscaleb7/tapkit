@@ -1,0 +1,43 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.p8
+*.p12
+*.key
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+supabase/.env
+supabase/functions/.env
+
+# build output
+dist/
+build/
+.next/
+out/
+web-build/
+.expo/
+.expo-shared/
+apps/mobile/ios/
+apps/mobile/android/
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/
+
+# supabase local
+supabase/.branches
+supabase/.temp
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json

@@ -7,6 +7,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ENV_FILE="${1:-$ROOT/tests/integration/functions.env}"
 set -a; source "$ENV_FILE"; set +a
+# Host processes reach host services on localhost, not host.docker.internal.
+export REVENUECAT_API_BASE="${REVENUECAT_API_BASE/host.docker.internal/127.0.0.1}"
 export SUPABASE_URL="${SUPABASE_URL:-http://127.0.0.1:54321}"
 export SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-$(cd "$ROOT" && npx supabase status -o json 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).SERVICE_ROLE_KEY))')}"
 declare -A PORTS=( [ai]=54401 [subscription-sync]=54402 [revenuecat-webhook]=54403 [account-delete]=54404 [account-export]=54405 [transcribe]=54406 )

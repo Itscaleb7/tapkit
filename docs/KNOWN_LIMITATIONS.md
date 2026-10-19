@@ -1,7 +1,7 @@
 # Known limitations
 
 ## Blocked by credentials or hardware (implemented, not live-verified)
-- **Real AI output.** No Anthropic key was available. All AI flows were verified with the mock provider through the same validation path. Review real output quality in staging.
+- **Real AI output.** No AI key was available (OpenAI and Anthropic providers are both implemented). All AI flows were verified with the mock provider through the same validation path. Review real output quality in staging.
 - **StoreKit purchases.** The purchase and restore code is implemented. Server-side verification is tested against a mock RevenueCat API, but no sandbox purchase was possible.
 - **On-device export.** The PNG capture, Photos save and share-sheet code paths need a device or simulator check. The renderer and ZIP are verified in Node.
 - **Transcription.** Optional; needs `TRANSCRIPTION_PROVIDER=openai` and a key. Without it, voice notes are saved and the user is asked to type a summary.

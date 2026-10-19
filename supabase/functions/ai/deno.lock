@@ -5,6 +5,7 @@
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "npm:@anthropic-ai/sdk@0.135.0": "0.135.0_zod@4.1.12",
     "npm:@supabase/supabase-js@2.118.0": "2.118.0",
+    "npm:openai@7.39.0": "7.39.0_zod@4.1.12",
     "npm:zod@4.1.12": "4.1.12"
   },
   "jsr": {
@@ -99,6 +100,15 @@
         "ts-algebra"
       ]
     },
+    "openai@7.39.0_zod@4.1.12": {
+      "integrity": "sha512-iEA9ndbrj32vhYZwJg2v9BQVuztGUOb2SBQU16ZcWNkQHWEBjtarxjqR9c6d5PbWMG0Eyfhk66OZ0iJ8XpFjyw==",
+      "dependencies": [
+        "zod"
+      ],
+      "optionalPeers": [
+        "zod"
+      ]
+    },
     "standardwebhooks@1.1.1": {
       "integrity": "sha512-bCbX9ZEyFkWPsRz7Bl3NuQUJohmwGSev/yhr7vhaGPlc4AfIrspIRa6cPTBuI1ItmrTDJ4d/S2hCsfe4+vQGnQ==",
       "dependencies": [
@@ -120,6 +130,7 @@
     "dependencies": [
       "npm:@anthropic-ai/sdk@0.135.0",
       "npm:@supabase/supabase-js@2.118.0",
+      "npm:openai@7.39.0",
       "npm:zod@4.1.12"
     ]
   }

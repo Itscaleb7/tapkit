@@ -56,7 +56,7 @@ All variables are documented in [`.env.example`](.env.example). Client-safe valu
 Everything that can run locally has been implemented and tested. These steps need your credentials or approval — full instructions in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) and [docs/APP_STORE_RELEASE.md](docs/APP_STORE_RELEASE.md):
 
 1. **Supabase project** — create, link, push migrations, deploy functions, set secrets.
-2. **Anthropic API key** — set `ANTHROPIC_API_KEY` (real AI output has not been exercised in this environment; tests use the mock provider).
+2. **AI key** — OpenAI (`AI_PROVIDER=openai`, `OPENAI_API_KEY`) or Anthropic (`ANTHROPIC_API_KEY`). Real AI output hasn't been exercised yet; tests use the mock provider.
 3. **Apple Developer + App Store Connect** — bundle ID, subscription products `tapkit_pro_monthly` / `tapkit_pro_annual`.
 4. **RevenueCat** — project, `pro` entitlement, offering, public iOS key, secret key, webhook.
 5. **Web hosting** (e.g. Vercel) for `apps/web` and your domain.

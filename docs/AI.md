@@ -4,7 +4,10 @@ All model calls happen in the `ai` Edge Function (`supabase/functions/ai/index.t
 
 ## Provider
 
-- Default: **Anthropic Claude** via the official `@anthropic-ai/sdk`, model `claude-opus-5-5` (override with `AI_MODEL`).
+Two real providers are implemented; choose with `AI_PROVIDER`:
+
+- **OpenAI** (`AI_PROVIDER=openai`, `OPENAI_API_KEY`, model `gpt-5.5` by default, override with `OPENAI_MODEL`): Responses API with **strict structured outputs**. The Zod schema is converted by `_shared/ai/strictSchema.ts` (closed objects, all fields required, validation keywords removed) and the result is re-validated with the full Zod schema. Reasoning effort is sent for GPT-5/o-series models. Refusals and truncated responses are handled; invalid output is regenerated once. The same key powers optional voice-note transcription.
+- **Anthropic Claude** (`AI_PROVIDER=anthropic`, the code default): via the official `@anthropic-ai/sdk`, model `claude-opus-5-5` (override with `AI_MODEL`).
 - Requests use adaptive thinking, an explicit `effort` per task, **structured outputs** (`output_config.format` built from the Zod schema with the SDK's `zodOutputFormat`), and server-side refusal fallbacks (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`).
 - Provider abstraction: `_shared/ai/provider.ts` (`AiProvider` interface), `anthropic.ts`, `mock.ts`, selected by `AI_PROVIDER`. To switch providers, add an implementation and a case in `_shared/ai/index.ts`.
 - `AI_PROVIDER=mock` returns deterministic, schema-valid outputs for development and automated tests. It is **refused** when `ENVIRONMENT=production`.
@@ -39,7 +42,10 @@ When a week has no recorded activity, the weekly review is produced deterministi
 ## Enabling real AI
 
 ```bash
-npx supabase secrets set ANTHROPIC_API_KEY=sk-ant-... AI_PROVIDER=anthropic ENVIRONMENT=production
+# OpenAI
+npx supabase secrets set AI_PROVIDER=openai OPENAI_API_KEY=sk-... TRANSCRIPTION_PROVIDER=openai ENVIRONMENT=production
+# or Anthropic
+npx supabase secrets set AI_PROVIDER=anthropic ANTHROPIC_API_KEY=sk-ant-... ENVIRONMENT=production
 ```
 
-**Verification status:** all tests ran with the mock provider. The Anthropic request code type-checks against SDK 0.135.0, but no live API call was made in this environment because no key was available. After adding the key, generate a blueprint and a carousel in a staging project and review the output quality before release.
+**Verification status:** all tests ran with the mock provider. Both provider implementations type-check against their SDKs (Anthropic 0.135.0, OpenAI 7.39.0), and every AI output schema is unit-tested for OpenAI strict-mode compatibility, but no live API call has been made yet. After adding the key, generate a blueprint and a carousel in a staging project and review the output quality before release.

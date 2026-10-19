@@ -26,7 +26,7 @@ export default function Insights() {
   const genReview = useGenerateWeeklyReview();
   const decide = useDecideRecommendation();
   const [reviewError, setReviewError] = useState<AppError | null>(null);
-  const [thisWeek] = useState(() => weekStartOf(new Date(Date.now() - 86_400_000)));
+  const [thisWeek] = useState(() => weekStartOf(new Date()));
   const [today] = useState(() => new Date().toISOString().slice(0, 10));
 
   if (experiments.isLoading) return <Loading />;

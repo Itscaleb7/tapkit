@@ -1,13 +1,14 @@
 import { LEAD_ACTIVITY_KINDS, LEAD_KINDS, LEAD_STAGES, labelOf, type LeadActivityKind } from "@tapkit/core";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Alert, Linking } from "react-native";
+import { Linking } from "react-native";
 import { Field, Input } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading } from "@/components/states";
 import { Badge, Button, Card, Chip, ChipGroup, Row, SectionHeader, Stack, Text } from "@/components/ui";
 import { useAddLeadActivity, useDeleteLead, useLead, useLeadActivities, useSaveLead } from "@/lib/queries";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 const ACTIVITY_LABEL: Record<LeadActivityKind, string> = { outreach: "Outreach", reply: "Reply", meeting: "Meeting", proposal: "Proposal", note: "Note", outcome: "Outcome" };
 
@@ -93,7 +94,7 @@ export default function LeadDetail() {
       <Button
         title="Delete"
         variant="danger"
-        onPress={() => Alert.alert("Delete this opportunity?", undefined, [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(l.id, { onSuccess: () => router.back() }) }])}
+        onPress={() => alert("Delete this opportunity?", undefined, [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(l.id, { onSuccess: () => router.back() }) }])}
       />
     </Screen>
   );

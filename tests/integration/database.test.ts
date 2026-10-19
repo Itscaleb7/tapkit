@@ -163,6 +163,13 @@ describe("proof bank search", () => {
     expect(ins.error).toBeNull();
     const { data } = await alice.client.from("proof_entries").select("title").textSearch("search", "marathon", { type: "websearch", config: "english" });
     expect(data?.map((d) => d.title)).toContain("First marathon");
+    // Exact filter used by the app's Proof Bank search (full-text OR title prefix match).
+    const term = "procrastination disguise";
+    const { data: appSearch, error: searchErr } = await alice.client.from("proof_entries").select("title").or(`search.wfts(english)."${term}",title.ilike."%${term}%"`);
+    expect(searchErr).toBeNull();
+    expect(appSearch?.map((d) => d.title)).toEqual(["Hot take"]);
+    const { data: partial } = await alice.client.from("proof_entries").select("title").or(`search.wfts(english)."Marat",title.ilike."%Marat%"`);
+    expect(partial?.map((d) => d.title)).toEqual(["First marathon"]);
     const { data: tagged } = await alice.client.from("proof_entries").select("title").contains("tags", ["running"]);
     expect(tagged?.map((d) => d.title)).toEqual(["First marathon"]);
   });

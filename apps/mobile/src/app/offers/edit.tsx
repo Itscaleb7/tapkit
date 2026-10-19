@@ -1,7 +1,8 @@
 import { OFFER_TYPES, type OfferAssist, offerInputSchema, type OfferType } from "@tapkit/core";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { alert } from "@/lib/confirm";
+
 import { Field, Input, TagInput, ToggleRow } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { Loading, Notice } from "@/components/states";
@@ -177,7 +178,7 @@ export default function EditOffer() {
         <Button
           title="Delete offer"
           variant="danger"
-          onPress={() => Alert.alert("Delete offer?", undefined, [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(id, { onSuccess: () => router.back() }) }])}
+          onPress={() => alert("Delete offer?", undefined, [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(id, { onSuccess: () => router.back() }) }])}
         />
       )}
     </Screen>

@@ -1,7 +1,7 @@
 import { type BrandBlueprint, brandBlueprintSchema, CONTENT_FORMATS, labelOf } from "@tapkit/core";
 import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { Field, Input } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { EmptyState, ErrorState, Loading, Notice } from "@/components/states";
@@ -9,6 +9,7 @@ import { Badge, BasisTag, Button, Card, Divider, Row, SectionHeader, Stack, Text
 import type { AppError } from "@/lib/errors";
 import { type Blueprint, useAcceptBlueprint, useBlueprints, useGenerateBlueprint, useUpdateBlueprint } from "@/lib/queries";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 export default function BlueprintScreen() {
   const params = useLocalSearchParams<{ id?: string; onboarding?: string }>();
@@ -37,13 +38,13 @@ export default function BlueprintScreen() {
   const doAccept = () =>
     accept.mutate(
       { id: bp.id, replacePillars: true },
-      { onSuccess: () => (fromOnboarding ? router.replace("/(tabs)/home") : router.back()), onError: (e) => Alert.alert("Couldn't accept", (e as Error).message) },
+      { onSuccess: () => (fromOnboarding ? router.replace("/(tabs)/home") : router.back()), onError: (e) => alert("Couldn't accept", (e as Error).message) },
     );
 
   const saveEdits = () => {
     if (!draft) return;
     const parsed = brandBlueprintSchema.safeParse(draft);
-    if (!parsed.success) return Alert.alert("Check your edits", parsed.error.issues[0]?.message ?? "Some fields are invalid");
+    if (!parsed.success) return alert("Check your edits", parsed.error.issues[0]?.message ?? "Some fields are invalid");
     update.mutate({ id: bp.id, patch: { content: parsed.data } }, { onSuccess: () => setEditing(false) });
   };
 
@@ -57,7 +58,7 @@ export default function BlueprintScreen() {
     });
 
   const reject = () =>
-    Alert.alert("Reject this blueprint?", "It stays in your history. You can regenerate or edit your answers.", [
+    alert("Reject this blueprint?", "It stays in your history. You can regenerate or edit your answers.", [
       { text: "Cancel", style: "cancel" },
       { text: "Reject", style: "destructive", onPress: () => update.mutate({ id: bp.id, patch: { status: "rejected" } }) },
     ]);

@@ -1,13 +1,14 @@
 import { engagementRate, formatPercent, METRIC_DEFINITIONS, type MetricKey, metricSnapshotInputSchema, metricsForPlatform, PLATFORMS } from "@tapkit/core";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { Field, Input } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading, Notice } from "@/components/states";
 import { Badge, Button, Card, ChipGroup, IconButton, Row, SectionHeader, Stack, Text } from "@/components/ui";
 import { useAddMetric, useContent, useDeleteMetric, useMetrics } from "@/lib/queries";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -115,7 +116,7 @@ export default function RecordResults() {
                 icon="trash-outline"
                 label="Delete snapshot"
                 color={colors.danger}
-                onPress={() => Alert.alert("Delete this snapshot?", undefined, [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(m.id) }])}
+                onPress={() => alert("Delete this snapshot?", undefined, [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(m.id) }])}
               />
             </Row>
           </Card>

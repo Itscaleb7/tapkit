@@ -3,7 +3,7 @@ import { PROOF_KINDS, type ProofClassification, proofEntryInputSchema } from "@t
 import { router, Stack as RouterStack, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { Field, Input, TagInput } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading, Notice } from "@/components/states";
@@ -11,6 +11,7 @@ import { Badge, Button, Card, ChipGroup, IconButton, Row, Stack, Text } from "@/
 import type { AppError } from "@/lib/errors";
 import { useClassifyProof, useDeleteProof, usePillars, useProofEntry, useTranscribe, useUpdateProof } from "@/lib/queries";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 export default function ProofDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -53,7 +54,7 @@ export default function ProofDetail() {
   };
 
   const remove = () =>
-    Alert.alert("Delete this entry?", "This permanently removes it (and any recording) from your Proof Bank. Content already created from it is kept.", [
+    alert("Delete this entry?", "This permanently removes it (and any recording) from your Proof Bank. Content already created from it is kept.", [
       { text: "Cancel", style: "cancel" },
       { text: "Delete", style: "destructive", onPress: () => del.mutate(e, { onSuccess: () => router.back() }) },
     ]);

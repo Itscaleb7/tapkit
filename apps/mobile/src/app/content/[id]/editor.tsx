@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { alert } from "@/lib/confirm";
 import {
   addSlide,
   CAROUSEL_THEMES,
@@ -17,7 +18,7 @@ import {
 } from "@tapkit/core";
 import { router, Stack as RouterStack, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from "react-native";
 import { Field, Input } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { SlideView } from "@/components/SlideView";
@@ -51,17 +52,23 @@ export default function CarouselEditor() {
     }
   }, [content.data, slides]);
 
+  const { mutateAsync } = update;
   const flush = useCallback(async () => {
     if (!latest.current) return;
     const payload = latest.current;
+    timer.current = null;
     setSaveState("saving");
     try {
-      await update.mutateAsync({ id, patch: { slides: payload.slides, theme_id: payload.themeId, user_edited: true } });
+      await mutateAsync({ id, patch: { slides: payload.slides, theme_id: payload.themeId, user_edited: true } });
       if (latest.current === payload) setSaveState("saved");
     } catch {
       setSaveState("error");
     }
-  }, [id, update]);
+  }, [id, mutateAsync]);
+  const flushRef = useRef(flush);
+  useEffect(() => {
+    flushRef.current = flush;
+  }, [flush]);
 
   const commit = (next: Slide[], nextTheme = themeId) => {
     setSlides(next);
@@ -72,15 +79,15 @@ export default function CarouselEditor() {
     timer.current = setTimeout(flush, 800);
   };
 
-  // Save immediately when leaving the editor.
+  // Save immediately when leaving the editor (unmount only).
   useEffect(
     () => () => {
       if (timer.current) {
         clearTimeout(timer.current);
-        flush();
+        flushRef.current();
       }
     },
-    [flush],
+    [],
   );
 
   if (content.isLoading || slides === null) return <Loading />;
@@ -99,7 +106,7 @@ export default function CarouselEditor() {
   };
 
   const add = (make: () => Slide) => {
-    if (slides.length >= MAX_SLIDES) return Alert.alert("Slide limit", `Carousels can have up to ${MAX_SLIDES} slides.`);
+    if (slides.length >= MAX_SLIDES) return alert("Slide limit", `Carousels can have up to ${MAX_SLIDES} slides.`);
     const next = addSlide(slides, make(), selected + 1);
     commit(next);
     setSelected(selected + 1);
@@ -108,7 +115,7 @@ export default function CarouselEditor() {
 
   const remove = () => {
     if (!current) return;
-    if (slides.length === 1) return Alert.alert("Keep at least one slide", "A carousel needs at least one slide.");
+    if (slides.length === 1) return alert("Keep at least one slide", "A carousel needs at least one slide.");
     commit(deleteSlide(slides, current.id));
     setSelected(Math.max(0, selected - 1));
   };

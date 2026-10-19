@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import Constants from "expo-constants";
-import { Alert } from "react-native";
+import { alert } from "@/lib/confirm";
+
 import { Screen } from "@/components/Screen";
 import { Badge, Button, Card, ListRow, Text } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
@@ -28,7 +29,7 @@ export default function Settings() {
         title="Sign out"
         variant="secondary"
         icon="log-out-outline"
-        onPress={() => Alert.alert("Sign out?", "Your work is saved to your account.", [{ text: "Cancel", style: "cancel" }, { text: "Sign out", style: "destructive", onPress: () => signOut() }])}
+        onPress={() => alert("Sign out?", "Your work is saved to your account.", [{ text: "Cancel", style: "cancel" }, { text: "Sign out", style: "destructive", onPress: () => signOut() }])}
       />
       <Text variant="caption" color={colors.subtle} center>
         TapKit {Constants.expoConfig?.version}

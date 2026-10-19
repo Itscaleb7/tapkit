@@ -364,7 +364,7 @@ const weeklyBody = z.object({ week_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/
 async function taskWeeklyReview(ctx: Ctx, body: unknown) {
   const { week_start } = weeklyBody.parse(body);
   const uid = ctx.user.id;
-  const weekStart = week_start ?? weekStartOf(new Date(Date.now() - 86_400_000)); // default: the week containing yesterday
+  const weekStart = week_start ?? weekStartOf(new Date()); // default: the current week (Monday–Sunday)
   const monthStart = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), 1)).toISOString();
   const { count: reviewsThisMonth } = await ctx.db.from("weekly_reviews").select("id", { count: "exact", head: true }).eq("user_id", uid).gte("created_at", monthStart);
   await countGuard(ctx, "weeklyReviewsPerMonth", reviewsThisMonth ?? 0, "AI weekly reviews this month");

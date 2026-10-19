@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { CONTENT_STATUSES, labelOf, rankActions } from "@tapkit/core";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { View } from "react-native";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading, Notice } from "@/components/states";
@@ -25,6 +25,8 @@ export default function Home() {
   if (home.error || !home.data) return <ErrorState error={home.error} onRetry={() => home.refetch()} />;
 
   const state = home.data;
+  // Brand-new (or mid-onboarding) users go straight to the questions; progress is resumable.
+  if (!state.onboardingCompleted && !state.hasPendingBlueprint && !state.hasAcceptedBlueprint) return <Redirect href="/onboarding" />;
   const actions = rankActions(state);
   const [next, ...rest] = actions;
   const firstName = profile.data?.display_name?.split(" ")[0];

@@ -1,6 +1,7 @@
 import { passwordSchema } from "@tapkit/core";
 import { useEffect, useState } from "react";
-import { Alert } from "react-native";
+import { alert } from "@/lib/confirm";
+
 import { Field, Input } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { Notice } from "@/components/states";
@@ -47,7 +48,7 @@ export default function Account() {
 
   const doDelete = () => {
     if (confirm !== "DELETE") return setMsg({ tone: "danger", text: 'Type DELETE to confirm.' });
-    Alert.alert("Delete your account permanently?", "This deletes your brand, Proof Bank, content, results, portfolio and recordings. It can't be undone.", [
+    alert("Delete your account permanently?", "This deletes your brand, Proof Bank, content, results, portfolio and recordings. It can't be undone.", [
       { text: "Cancel", style: "cancel" },
       {
         text: "Delete forever",

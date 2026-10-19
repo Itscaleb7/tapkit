@@ -323,5 +323,5 @@ const styles = StyleSheet.create({
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.sm },
   listRow: { flexDirection: "row", alignItems: "center", gap: space.md, paddingVertical: space.md, paddingHorizontal: space.xs, minHeight: 56, borderRadius: radius.md },
   listIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.brandSoft, alignItems: "center", justifyContent: "center" },
-  stat: { flex: 1, backgroundColor: colors.surface, borderRadius: radius.md, padding: space.md, gap: 2, minWidth: 100 },
+  stat: { flex: 1, alignSelf: "stretch", backgroundColor: colors.surface, borderRadius: radius.md, padding: space.md, gap: 2, minWidth: 100 },
 });

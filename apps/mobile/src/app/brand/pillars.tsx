@@ -1,12 +1,13 @@
 import { pillarInputSchema } from "@tapkit/core";
 import { useState } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 import { Field, Input, TagInput } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading, Notice } from "@/components/states";
 import { Badge, Button, Card, IconButton, Row, Stack, Text } from "@/components/ui";
 import { type Pillar, usePillars, useSavePillar } from "@/lib/queries";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 export default function Pillars() {
   const pillars = usePillars();
@@ -34,7 +35,7 @@ export default function Pillars() {
   };
 
   const remove = (p: Pillar) =>
-    Alert.alert("Remove this pillar?", "Existing content keeps its link to it. You can add it back anytime.", [
+    alert("Remove this pillar?", "Existing content keeps its link to it. You can add it back anytime.", [
       { text: "Cancel", style: "cancel" },
       { text: "Remove", style: "destructive", onPress: () => save.mutate({ id: p.id, name: p.name, is_active: false }) },
     ]);

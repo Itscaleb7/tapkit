@@ -2,7 +2,7 @@ import { CONTENT_FORMATS, CONTENT_STATUSES, type ContentStatus, httpUrl, labelOf
 import * as Clipboard from "expo-clipboard";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, FlatList, useWindowDimensions, View } from "react-native";
+import { FlatList, useWindowDimensions, View } from "react-native";
 import { Field, Input, TagInput } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { SlideView } from "@/components/SlideView";
@@ -10,6 +10,7 @@ import { ErrorState, Loading, Notice } from "@/components/states";
 import { Badge, Button, Card, Chip, ChipGroup, Row, SectionHeader, Stack, Text } from "@/components/ui";
 import { useContent, useContentSources, useDeleteContent, useExperiments, useMetrics, useProfile, useUpdateContent } from "@/lib/queries";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 export default function ContentDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -72,7 +73,7 @@ export default function ContentDetail() {
   };
 
   const remove = () =>
-    Alert.alert("Delete this content?", "This can't be undone. Its recorded results are deleted too.", [
+    alert("Delete this content?", "This can't be undone. Its recorded results are deleted too.", [
       { text: "Cancel", style: "cancel" },
       { text: "Delete", style: "destructive", onPress: () => del.mutate(c.id, { onSuccess: () => router.back() }) },
     ]);

@@ -1,5 +1,6 @@
 import { router } from "expo-router";
-import { Alert } from "react-native";
+import { alert } from "@/lib/confirm";
+
 import { Screen } from "@/components/Screen";
 import { Notice } from "@/components/states";
 import { Button, Card, Stack, Text } from "@/components/ui";
@@ -13,7 +14,7 @@ export default function Alternatives() {
   const err = alt.error as AppError | null;
 
   const apply = (positioning: string, audience: string, label: string) =>
-    Alert.alert("Use this positioning?", "Your current positioning is saved in Brand history, so you can switch back.", [
+    alert("Use this positioning?", "Your current positioning is saved in Brand history, so you can switch back.", [
       { text: "Cancel", style: "cancel" },
       { text: "Use it", onPress: () => save.mutate({ patch: { positioning, audience }, summary: `Switched to alternative positioning: ${label}` }, { onSuccess: () => router.back() }) },
     ]);

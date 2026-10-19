@@ -1,7 +1,8 @@
 import { computeExperimentStats, EVIDENCE_COPY, type ExperimentAnalysis, formatLift, formatPercent, METRIC_DEFINITIONS, type MetricKey, type MetricRecord } from "@tapkit/core";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import { Alert } from "react-native";
+import { alert } from "@/lib/confirm";
+
 import { Field, Input } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading, Notice } from "@/components/states";
@@ -53,7 +54,7 @@ export default function ExperimentDetail() {
   const pm = stats.primaryMetric as MetricKey | null;
 
   const finish = (status: "completed" | "abandoned") =>
-    save.mutate({ id: e.id, status, conclusion: conclusion || null, next_action: nextAction || null }, { onError: (x) => Alert.alert("Couldn't save", (x as Error).message) });
+    save.mutate({ id: e.id, status, conclusion: conclusion || null, next_action: nextAction || null }, { onError: (x) => alert("Couldn't save", (x as Error).message) });
 
   return (
     <Screen edges={["bottom"]}>
@@ -151,7 +152,7 @@ export default function ExperimentDetail() {
       <Button
         title="Delete experiment"
         variant="danger"
-        onPress={() => Alert.alert("Delete experiment?", "Linked posts and their results are kept.", [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(e.id, { onSuccess: () => router.back() }) }])}
+        onPress={() => alert("Delete experiment?", "Linked posts and their results are kept.", [{ text: "Cancel", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => del.mutate(e.id, { onSuccess: () => router.back() }) }])}
       />
     </Screen>
   );

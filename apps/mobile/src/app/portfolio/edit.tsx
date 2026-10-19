@@ -5,7 +5,7 @@ import { File } from "expo-file-system";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState } from "react";
-import { Alert, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Field, Input, TagInput, ToggleRow } from "@/components/forms";
 import { Screen } from "@/components/Screen";
 import { ErrorState, Loading, Notice } from "@/components/states";
@@ -16,6 +16,7 @@ import { useEntitlement, useIsPro } from "@/lib/entitlement";
 import { useBrand, useContentList, useDeletePortfolioItem, usePortfolio, usePortfolioItems, useProfile, useSavePortfolio, useSavePortfolioItem } from "@/lib/queries";
 import { supabase } from "@/lib/supabase";
 import { colors, space } from "@/theme/tokens";
+import { alert } from "@/lib/confirm";
 
 const ACCENTS = ["#FF6A13", "#1A1410", "#2563EB", "#059669", "#7C3AED", "#DB2777"];
 
@@ -111,20 +112,20 @@ export default function EditPortfolio() {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 0.8 });
     if (res.canceled || !res.assets[0] || !session) return;
     const asset = res.assets[0];
-    if ((asset.fileSize ?? 0) > 5 * 1024 * 1024) return Alert.alert("Image too large", "Choose an image under 5 MB.");
+    if ((asset.fileSize ?? 0) > 5 * 1024 * 1024) return alert("Image too large", "Choose an image under 5 MB.");
     const ext = asset.mimeType === "image/png" ? "png" : "jpg";
     const path = `${session.user.id}/avatar-${Date.now()}.${ext}`;
     const bytes = await new File(asset.uri).bytes();
     const { error } = await supabase.storage.from("portfolio-media").upload(path, bytes, { contentType: asset.mimeType ?? "image/jpeg", upsert: true });
-    if (error) return Alert.alert("Upload failed", error.message);
+    if (error) return alert("Upload failed", error.message);
     if (f.avatar_path) supabase.storage.from("portfolio-media").remove([f.avatar_path]);
     set({ avatar_path: path });
   };
 
-  const addContent = (id: string, title: string) => saveItem.mutate({ kind: "content", content_id: id, title, position: items.data?.length ?? 0 }, { onError: (e) => Alert.alert("Couldn't add", (e as Error).message) });
+  const addContent = (id: string, title: string) => saveItem.mutate({ kind: "content", content_id: id, title, position: items.data?.length ?? 0 }, { onError: (e) => alert("Couldn't add", (e as Error).message) });
   const addLink = () => {
-    if (!newLink.title.trim() || !/^https?:\/\//i.test(newLink.url)) return Alert.alert("Add a title and a valid https:// link");
-    saveItem.mutate({ kind: "link", title: newLink.title.trim(), url: newLink.url.trim(), description: newLink.description || null, position: items.data?.length ?? 0 }, { onSuccess: () => setNewLink({ title: "", url: "", description: "" }), onError: (e) => Alert.alert("Couldn't add", (e as Error).message) });
+    if (!newLink.title.trim() || !/^https?:\/\//i.test(newLink.url)) return alert("Add a title and a valid https:// link");
+    saveItem.mutate({ kind: "link", title: newLink.title.trim(), url: newLink.url.trim(), description: newLink.description || null, position: items.data?.length ?? 0 }, { onSuccess: () => setNewLink({ title: "", url: "", description: "" }), onError: (e) => alert("Couldn't add", (e as Error).message) });
   };
   const usedContent = new Set((items.data ?? []).map((i) => i.content_id));
 

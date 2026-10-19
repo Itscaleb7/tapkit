@@ -16,7 +16,6 @@ const config: ExpoConfig = {
     buildNumber: "1",
     supportsTablet: false,
     deploymentTarget: "16.4",
-    config: { usesNonExemptEncryption: false },
     infoPlist: {
       NSMicrophoneUsageDescription: "TapKit uses the microphone to record voice notes for your Proof Bank.",
       NSPhotoLibraryAddUsageDescription: "TapKit saves your exported carousel images to your photo library.",
